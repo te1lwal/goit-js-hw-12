@@ -1,4 +1,4 @@
-// importing modules and packages
+
 import { fetchImages } from './js/pixabay-api';
 import {
   renderGallery,
@@ -9,7 +9,6 @@ import {
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-// getting DOM elements
 const form = document.getElementById('search-form');
 const input = document.querySelector('.search-input');
 const loader = document.querySelector('.loader');
@@ -18,7 +17,6 @@ const loadMoreBtn = document.querySelector('.load-more-btn');
 let query = '';
 let page = 1;
 
-// adding event listener to the input
 form.addEventListener('submit', async event => {
   event.preventDefault();
 
@@ -33,18 +31,15 @@ form.addEventListener('submit', async event => {
     return;
   }
 
-  // clearing the gallery and showing the loader
   clearGallery();
   showLoader(loader);
   loadMoreBtn.classList.add('hidden');
-  page = 1; // resetting the page number
+  page = 1; 
 
-  // fetching the images from the server
   try {
     const data = await fetchImages(query, page);
-    hideLoader(loader); // hiding the loader
+    hideLoader(loader); 
 
-    // sending the warning if there are no images for the query
     if (data.hits.length === 0) {
       iziToast.warning({
         message: 'Sorry, there are no images matching your search query.',
@@ -55,15 +50,12 @@ form.addEventListener('submit', async event => {
       return;
     }
 
-    // rendering the gallery with query informations
     renderGallery(data.hits);
 
-    // adding load more btn if there are moro imsges to show
     if (data.totalHits > page * 15) {
       loadMoreBtn.classList.remove('hidden');
     }
   } catch (error) {
-    // sending the warning if there's an error
     hideLoader(loader);
     iziToast.error({
       message: 'Something went wrong. Please try again.',
@@ -75,12 +67,10 @@ form.addEventListener('submit', async event => {
   }
 });
 
-// adding event listener to the Load More btn
 loadMoreBtn.addEventListener('click', async () => {
   page += 1;
   showLoader(loader);
 
-  // fetching more images from the server
   try {
     const data = await fetchImages(query, page);
     hideLoader(loader);
@@ -95,7 +85,6 @@ loadMoreBtn.addEventListener('click', async () => {
       return;
     }
 
-    // smooth scrolling
     const { height: cardHeight } = document
       .querySelector('.gallery')
       .firstElementChild.getBoundingClientRect();
